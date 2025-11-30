@@ -1,0 +1,55 @@
+name: Validate Repository Structure
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    name: Validate Project Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Check for essential files
+        run: |
+          echo "Checking project structure..."
+          test -f "README.md" || exit 1
+          test -f "prey.pdf" || exit 1
+          test -d "PreyPredator" || exit 1
+          echo "✓ Essential files found"
+      
+      - name: Validate Simulink project
+        run: |
+          echo "Checking Simulink project files..."
+          test -f "PreyPredator/Prey_Predator_STM32F4.slx" || exit 1
+          test -f "PreyPredator/fismat.fis" || exit 1
+          echo "✓ Simulink project files found"
+
+  check-documentation:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Check README
+        run: |
+          test -f "README.md" || exit 1
+          echo "✓ README.md found"
+      
+      - name: Check LICENSE
+        run: |
+          test -f "LICENSE" || exit 1
+          echo "✓ LICENSE found"
+      
+      - name: Check images
+        run: |
+          test -f "Prey_Predator_STM32FDISCO.jpg" || echo "⚠ Hardware image not found"
+          test -f "LCD_specs.jpg" || echo "⚠ LCD specs image not found"
+          echo "✓ Image check complete"
+

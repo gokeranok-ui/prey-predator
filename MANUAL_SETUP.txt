@@ -1,0 +1,112 @@
+═══════════════════════════════════════════════════════════════════
+   MANUAL SETUP INSTRUCTIONS - Prey-Predator GitHub Repository
+═══════════════════════════════════════════════════════════════════
+
+Since automated commands are timing out, follow these steps manually:
+
+───────────────────────────────────────────────────────────────────
+STEP 1: Clean Up (if git was already initialized)
+───────────────────────────────────────────────────────────────────
+
+Open PowerShell and run:
+
+    cd C:\Users\prizy\Desktop\Github_PreyPredator
+    
+    # If .git folder exists, delete it:
+    Remove-Item -Recurse -Force .git -ErrorAction SilentlyContinue
+
+───────────────────────────────────────────────────────────────────
+STEP 2: Initialize Git Locally
+───────────────────────────────────────────────────────────────────
+
+Run these commands one at a time:
+
+    cd C:\Users\prizy\Desktop\Github_PreyPredator
+    git init
+    git config user.name "ARIYAK"
+    git config user.email "your-email@example.com"  # Replace with your email
+
+───────────────────────────────────────────────────────────────────
+STEP 3: Add Files (Only Essential Files)
+───────────────────────────────────────────────────────────────────
+
+Add files in small batches:
+
+    # Add documentation first
+    git add README.md LICENSE CHANGELOG.md CODE_ANALYSIS.md
+    git add CONTRIBUTING.md PUBLICATION_SUMMARY.md SETUP_SUMMARY.md
+    git add SETUP_AND_PUSH.md MANUAL_SETUP.txt
+    
+    # Add configuration files
+    git add .gitignore .github/
+    
+    # Add images
+    git add *.jpg
+    
+    # Add research paper
+    git add prey.pdf
+    
+    # Add Simulink source files only (not generated code)
+    git add PreyPredator/Prey_Predator_STM32F4.slx
+    git add PreyPredator/fismat.fis
+    git add PreyPredator/predator_prey.m
+    git add PreyPredator/Presentation.mdl
+
+───────────────────────────────────────────────────────────────────
+STEP 4: Create Initial Commit
+───────────────────────────────────────────────────────────────────
+
+    git commit -m "Initial commit: Prey-Predator fuzzy logic control system"
+    git branch -M main
+
+───────────────────────────────────────────────────────────────────
+STEP 5: Create Repository on GitHub (DO THIS FIRST!)
+───────────────────────────────────────────────────────────────────
+
+1. Open your browser
+2. Go to: https://github.com/new
+3. Sign in as ARIYAK
+4. Repository name: prey-predator
+5. Description: "Fuzzy logic control system for predator-prey dynamics on STM32F4 using Simulink and Waijung Blockset"
+6. ⚠️ SELECT "PRIVATE" (very important!)
+7. DO NOT check "Add a README file"
+8. Click "Create repository"
+
+───────────────────────────────────────────────────────────────────
+STEP 6: Connect and Push to GitHub
+───────────────────────────────────────────────────────────────────
+
+After creating the repository, run:
+
+    git remote add origin https://github.com/ARIYAK/prey-predator.git
+    git push -u origin main
+
+You may be prompted for your GitHub username and password/token.
+
+───────────────────────────────────────────────────────────────────
+IMPORTANT NOTES:
+───────────────────────────────────────────────────────────────────
+
+✅ Generated code directory is excluded (in .gitignore)
+   - This is intentional - it's 843 files and can be regenerated
+   
+✅ Only source files and documentation are included
+   - Simulink model (.slx)
+   - Fuzzy logic system (.fis)
+   - Documentation and images
+   - Research paper
+
+✅ Repository will be PRIVATE until journal publication
+
+✅ After pushing, verify at: https://github.com/ARIYAK/prey-predator
+
+═══════════════════════════════════════════════════════════════════
+
+If you encounter errors, check:
+- Are you signed into GitHub as ARIYAK?
+- Is the repository name exactly "prey-predator"?
+- Did you create it as PRIVATE?
+- Do you have the correct permissions?
+
+═══════════════════════════════════════════════════════════════════
+

@@ -1,0 +1,167 @@
+# MATLAB/Simulink Files
+*.asv
+*.autosave
+*.m~
+*.slxc
+*.slprj/
+*.mlappinstall
+*.mltbx
+*.prj
+*.proj
+
+# Simulink Cache and Generated Files
+slprj/
+*.rtw
+*.tmw
+*.tlc
+*.tlh
+*.tlf
+*.dll
+*.lib
+*.exp
+*.obj
+
+# MATLAB Compiler
+*.ctf
+*.ctf.bin
+
+# MATLAB Report Generator
+html/
+
+# Simulink Code Generation
+*_rtw/
+*.rtw
+build/
+bin/
+
+# Compiled MEX files
+*.mexw64
+*.mexw32
+*.mexa64
+*.mexmaci64
+
+# MATLAB Preferences
+matlab.prf
+
+# Temporary files
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+.#*
+
+# OS Files
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+.DS_Store
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+## Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Build outputs (embedded)
+*.o
+*.d
+*.su
+*.elf
+*.hex
+*.bin
+*.map
+*.list
+*.axf
+
+# Debug files
+Debug/
+Release/
+*.uvguix*
+*.uvoptx
+*.uvprojx.bak
+*.ilk
+*.pdb
+*.idb
+*.pch
+
+# IDE specific files
+## STM32CubeIDE
+.metadata/
+.settings/
+.project
+.cproject
+.launch
+
+## Keil MDK-ARM
+*.uvguix*
+*.uvoptx
+*.uvprojx.bak
+Listings/
+Objects/
+
+## IAR
+*.eww
+*.ewd
+*.ewp
+*.ewt
+*.dep
+*.dni
+settings/
+
+## VS Code
+.vscode/
+*.code-workspace
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+
+# Generated files that can be regenerated
+*.rtw
+*.tmw
+
+# Large binary files (keep source, exclude binaries)
+*.hex
+*.bin
+*.elf
+*.map
+
+# Documentation builds
+docs/_build/
+site/
+
+# Logs
+*.log
+*.sql
+*.sqlite
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Generated code (can be regenerated from Simulink model)
+PreyPredator/Prey_Predator_STM32F4_stm32f4/
+PreyPredator/slprj/
+PreyPredator/*.slxc
+PreyPredator.zip
+
