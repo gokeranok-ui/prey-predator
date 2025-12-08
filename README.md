@@ -70,13 +70,48 @@ This project demonstrates a **fuzzy logic control system for predator-prey popul
 
 **Input Variables:**
 - **X1 (Prey)**: Range [0, 5000] with 5 membership functions (S, MS, M, ML, L)
+  - **Default Implementation Value**: 3200
 - **X2 (Predator)**: Range [0, 3000] with 5 membership functions (S, MS, M, ML, L)
+  - **Default Implementation Value**: 1300
 
 **Output Variables:**
 - **ΔX1 (Change in Prey)**: Range [-800, 800]
 - **ΔX2 (Change in Predator)**: Range [-400, 400]
 
 **Inference Rules:** 4 fuzzy rules implementing ecological control logic
+
+### Default Implementation Values
+
+This project was implemented using the following input values:
+- **Prey Population (X1)**: **3200**
+- **Predator Population (X2)**: **1300**
+
+These values are within the admissible region defined by the fuzzy logic system's membership functions and provide a good demonstration of the control system behavior.
+
+### Modifying Input Values
+
+Users can modify these input values within the admissible region (as defined by the fuzzy system's input ranges) by following these steps:
+
+1. **Open the Simulink Model:**
+   - Open `PreyPredator/Prey_Predator_STM32F4.slx` in MATLAB Simulink
+
+2. **Locate the Constant Blocks:**
+   - Find the two constant blocks currently set to:
+     - **3200** (for Prey population)
+     - **1300** (for Predator population)
+
+3. **Replace with Memory Blocks L and M:**
+   - Replace the constant block for Prey (3200) with a **Memory block labeled L**
+   - Replace the constant block for Predator (1300) with a **Memory block labeled M**
+   - Assign new values to memory blocks L and M within the admissible ranges:
+     - **Memory Block L (Prey)**: Any value in range [0, 5000]
+     - **Memory Block M (Predator)**: Any value in range [0, 3000]
+
+4. **Rebuild the Model:**
+   - After modifying the memory blocks, rebuild the Simulink model (Ctrl+B)
+   - The generated code will use the new values assigned to memory blocks L and M
+
+**Note:** Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values. This approach allows flexible testing of different predator-prey population scenarios while maintaining the system's fuzzy logic control structure within the admissible region.
 
 ## ⚡ Performance Metrics
 
@@ -190,9 +225,9 @@ prey-predator/
    - Connect LCD and buttons according to pin mapping
 
 4. **Run**:
-   - System starts automatically
+   - System starts automatically with default input values (Prey: 3200, Predator: 1300)
    - LCD displays fuzzy inference outputs in real-time
-   - Use buttons to change input values interactively
+   - To modify input values, edit the Simulink model as described in the "Modifying Input Values" section above
 
 ### Hardware Connections
 
@@ -244,6 +279,7 @@ This implementation serves as a **proof-of-concept** showing that:
 - The fuzzy logic implementation follows **Mamdani inference** methodology
 - Code is optimized for **real-time execution** on STM32F4 (168 MHz Cortex-M4)
 - System runs at **100 Hz** with deterministic execution time
+- **Input Modification**: Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values
 
 ## 🔒 Repository Status
 
@@ -279,4 +315,3 @@ See [LICENSE](LICENSE) file for more details.
 **Project Status**: Ready for journal submission  
 **Hardware Validated**: ✅ STM32F4 Discovery Board  
 **Performance Verified**: ✅ Real-time execution confirmed
-
