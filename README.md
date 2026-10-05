@@ -1,11 +1,11 @@
-﻿# Prey-Predator Fuzzy Logic Control System
+# Prey-Predator Fuzzy Logic Control System
 
 [![GitHub](https://img.shields.io/badge/GitHub-gokeranok--ui-blue?logo=github)](https://github.com/gokeranok-ui)
 
 **Repository:** [https://github.com/gokeranok-ui/prey-predator](https://github.com/gokeranok-ui/prey-predator)  
-**Status:** ≡ƒöÆ Private (Will be made public upon journal publication)
+**Status:** 🔒 Private (Will be made public upon journal publication)
 
-## ≡ƒôû Project Story
+## 📖 Project Story
 
 This project was inspired by the research paper **"Fuzzy Logic Control for Predator-Prey Systems"** by Bojadziev (1995) - included as `prey.pdf` in this repository. The paper presented a theoretical framework for using fuzzy logic to control ecological population dynamics in predator-prey systems, and we wondered: *"Can we implement this on a real embedded system?"*
 
@@ -13,16 +13,16 @@ This project was inspired by the research paper **"Fuzzy Logic Control for Preda
 
 **From Paper to Prototype**
 
-The journey began with reading the research paper, which described a Mamdani-type fuzzy inference system for managing predator and prey populations. The elegance of the approachΓÇöusing linguistic rules instead of complex mathematical modelsΓÇöinspired us to create a practical implementation.
+The journey began with reading the research paper, which described a Mamdani-type fuzzy inference system for managing predator and prey populations. The elegance of the approach—using linguistic rules instead of complex mathematical models—inspired us to create a practical implementation.
 
 **Simulink + Waijung Blockset: A Successful Approach**
 
 We chose to implement this using **MATLAB Simulink** with the **Waijung Blockset**, an open-source solution for embedded code generation targeting STM32 microcontrollers. This choice proved to be highly successful:
 
-- Γ£à **Graphical Modeling**: Visual representation of the fuzzy logic system
-- Γ£à **Automatic Code Generation**: From Simulink model to production-ready C code
-- Γ£à **Hardware Integration**: Direct support for LCD displays, buttons, and other peripherals
-- Γ£à **Real-Time Execution**: Successfully deployed on STM32F4 Discovery board
+- ✅ **Graphical Modeling**: Visual representation of the fuzzy logic system
+- ✅ **Automatic Code Generation**: From Simulink model to production-ready C code
+- ✅ **Hardware Integration**: Direct support for LCD displays, buttons, and other peripherals
+- ✅ **Real-Time Execution**: Successfully deployed on STM32F4 Discovery board
 
 **Hardware Realization**
 
@@ -57,12 +57,12 @@ To reduce cable complexity and simplify wiring, you can use an **I2C LCD backpac
 
 *Figure 2: LCD specifications and pinout information*
 
-## ≡ƒÄ» Project Overview
+## 🎯 Project Overview
 
 This project demonstrates a **fuzzy logic control system for predator-prey population dynamics** running on an embedded STM32F4 microcontroller. The system:
 
 - Takes two inputs: **Prey population** (X1) and **Predator population** (X2)
-- Produces two outputs: **Recommended change in Prey** (╬öX1) and **Recommended change in Predator** (╬öX2)
+- Produces two outputs: **Recommended change in Prey** (ΔX1) and **Recommended change in Predator** (ΔX2)
 - Uses **Mamdani fuzzy inference** with centroid defuzzification
 - Runs in **real-time** at 100 Hz (10 ms sample period)
 
@@ -75,8 +75,8 @@ This project demonstrates a **fuzzy logic control system for predator-prey popul
   - **Default Implementation Value**: 1300
 
 **Output Variables:**
-- **╬öX1 (Change in Prey)**: Range [-800, 800]
-- **╬öX2 (Change in Predator)**: Range [-400, 400]
+- **ΔX1 (Change in Prey)**: Range [-800, 800]
+- **ΔX2 (Change in Predator)**: Range [-400, 400]
 
 **Inference Rules:** 4 fuzzy rules implementing ecological control logic
 
@@ -113,7 +113,7 @@ Users can modify these input values within the admissible region (as defined by 
 
 **Note:** Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values. This approach allows flexible testing of different predator-prey population scenarios while maintaining the system's fuzzy logic control structure within the admissible region.
 
-## ΓÜí Performance Metrics
+## ⚡ Performance Metrics
 
 ### Execution Time Analysis
 
@@ -130,7 +130,7 @@ One of the key achievements of this project was demonstrating that fuzzy logic i
 - Consequent evaluation & aggregation: ~8,080 cycles
 - Defuzzification: ~2,020 cycles
 - Hardware I/O overhead: ~50,000 cycles
-- **Total**: ~60,680 cycles Γëê 0.36 ms @ 168 MHz
+- **Total**: ~60,680 cycles ≈ 0.36 ms @ 168 MHz
 
 This demonstrates that fuzzy logic control is **well-suited for real-time embedded applications**, with plenty of headroom for additional processing or higher sample rates.
 
@@ -142,7 +142,7 @@ This demonstrates that fuzzy logic control is **well-suited for real-time embedd
 
 *Figure 4: System hardware setup showing the integrated controller*
 
-## ≡ƒ¢á∩╕Å Technical Implementation
+## 🛠️ Technical Implementation
 
 ### Toolchain
 
@@ -176,28 +176,28 @@ The system implements a complete Mamdani fuzzy inference engine:
 4. **Aggregation**: Rule outputs combined using MAX operator
 5. **Defuzzification**: Centroid method with 101 sample points per output
 
-## ≡ƒôü Repository Structure
+## 📁 Repository Structure
 
 ```
 prey-predator/
-Γö£ΓöÇΓöÇ README.md                           # This file
-Γö£ΓöÇΓöÇ prey.pdf                            # Research paper that inspired the project
-Γö£ΓöÇΓöÇ Prey_Predator_STM32FDISCO.jpg       # Hardware setup photo
-Γö£ΓöÇΓöÇ LCD_specs.jpg                       # LCD specifications
-Γö£ΓöÇΓöÇ sim1.jpg                            # Simulation results
-Γö£ΓöÇΓöÇ SH1.jpg                             # System hardware photo
-Γö£ΓöÇΓöÇ PreyPredator/                       # Simulink project files
-Γöé   Γö£ΓöÇΓöÇ Prey_Predator_STM32F4.slx       # Main Simulink model
-Γöé   Γö£ΓöÇΓöÇ fismat.fis                      # Fuzzy Inference System definition
-Γöé   Γö£ΓöÇΓöÇ predator_prey.m                 # Original MATLAB script
-Γöé   ΓööΓöÇΓöÇ Prey_Predator_STM32F4_stm32f4/  # Generated C code (843 files)
-Γöé       Γö£ΓöÇΓöÇ main.c                      # Entry point with SysTick ISR
-Γöé       Γö£ΓöÇΓöÇ Prey_Predator_STM32F4.c     # Main fuzzy logic implementation
-Γöé       ΓööΓöÇΓöÇ [other generated files...]
-ΓööΓöÇΓöÇ [additional documentation...]
+├── README.md                           # This file
+├── prey.pdf                            # Research paper that inspired the project
+├── Prey_Predator_STM32FDISCO.jpg       # Hardware setup photo
+├── LCD_specs.jpg                       # LCD specifications
+├── sim1.jpg                            # Simulation results
+├── SH1.jpg                             # System hardware photo
+├── PreyPredator/                       # Simulink project files
+│   ├── Prey_Predator_STM32F4.slx       # Main Simulink model
+│   ├── fismat.fis                      # Fuzzy Inference System definition
+│   ├── predator_prey.m                 # Original MATLAB script
+│   └── Prey_Predator_STM32F4_stm32f4/  # Generated C code (843 files)
+│       ├── main.c                      # Entry point with SysTick ISR
+│       ├── Prey_Predator_STM32F4.c     # Main fuzzy logic implementation
+│       └── [other generated files...]
+└── [additional documentation...]
 ```
 
-## ≡ƒÜÇ Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -245,14 +245,14 @@ prey-predator/
 - Modify Simulink model to use I2C LCD block
 - Requires I2C LCD library driver
 
-## ≡ƒôè Research Contributions
+## 📊 Research Contributions
 
 This project demonstrates:
 
-1. **Γ£à Successful Code Generation**: From Simulink graphical models to embedded C code
-2. **Γ£à Real-Time Performance**: Sub-millisecond fuzzy inference on microcontroller
-3. **Γ£à Practical Application**: Ecological control system running on embedded hardware
-4. **Γ£à Alternative Workflow**: Model-based design for fuzzy logic systems
+1. **✅ Successful Code Generation**: From Simulink graphical models to embedded C code
+2. **✅ Real-Time Performance**: Sub-millisecond fuzzy inference on microcontroller
+3. **✅ Practical Application**: Ecological control system running on embedded hardware
+4. **✅ Alternative Workflow**: Model-based design for fuzzy logic systems
 
 ### For Journal Publication
 
@@ -263,7 +263,7 @@ This implementation serves as a **proof-of-concept** showing that:
 - Real-time performance is achievable with minimal CPU overhead
 - The approach is accessible to engineers familiar with Simulink but new to embedded C programming
 
-## ≡ƒôÜ References
+## 📚 References
 
 1. **Bojadziev, G. (1995)**. "Fuzzy Logic Control for Predator-Prey Systems". *Fuzzy Sets and Systems*. (Included as `prey.pdf`)
 
@@ -273,7 +273,7 @@ This implementation serves as a **proof-of-concept** showing that:
 
 4. **MATLAB Simulink Real-Time Workshop**: MathWorks Documentation
 
-## ≡ƒô¥ Notes
+## 📝 Notes
 
 - This code is **auto-generated** from Simulink model using MATLAB Real-Time Workshop
 - The fuzzy logic implementation follows **Mamdani inference** methodology
@@ -281,19 +281,19 @@ This implementation serves as a **proof-of-concept** showing that:
 - System runs at **100 Hz** with deterministic execution time
 - **Input Modification**: Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values
 
-## ≡ƒöÆ Repository Status
+## 🔒 Repository Status
 
 **Current Status: PRIVATE**
 
 This repository is currently private and will remain so until the associated research paper is published. Upon publication, the repository will be made public to serve as supplementary material and allow reproducibility of the research.
 
-## ≡ƒæñ Author
+## 👤 Author
 
 **ARIYAK**
 
 GitHub: [@gokeranok-ui](https://github.com/gokeranok-ui)
 
-## ≡ƒôä License
+## 📄 License
 
 This project includes code generated from MATLAB/Simulink and Waijung Blockset. Please refer to:
 - MATLAB/Simulink licensing terms (MathWorks)
@@ -302,7 +302,7 @@ This project includes code generated from MATLAB/Simulink and Waijung Blockset. 
 
 See [LICENSE](LICENSE) file for more details.
 
-## ≡ƒÖÅ Acknowledgments
+## 🙏 Acknowledgments
 
 - **Bojadziev** for the inspiring research paper on fuzzy control for predator-prey systems
 - **Waijung Blockset team** for providing excellent embedded code generation tools
@@ -313,15 +313,5 @@ See [LICENSE](LICENSE) file for more details.
 
 **Last Updated**: January 2025  
 **Project Status**: Ready for journal submission  
-**Hardware Validated**: Γ£à STM32F4 Discovery Board  
-**Performance Verified**: Γ£à Real-time execution confirmed
-
----
-
-## Journal preparation notes (updated 2026-09-27)
-
-- Private repo: unauthenticated web/API access returns 404; collaborators use git with credentials.
-- Keep tipper.fis (MATLAB Coder) timings and PreyPredator (Waijung) timings in **separate** tables.
-- Prefer measured tipper set from Journal Yazimi / 25Kasim: Pi 3.026 ms, STM32F469 135.735 ms @ 180 MHz, Arduino Due 171.652 ms (I/O included).
-- PreyPredator STM32F4 Discovery: ~7.67 ms (DWT, 10k samples).
-- Do not cite superseded STM32F469 **2.5 ms** figures from older 17Aralik drafts.
+**Hardware Validated**: ✅ STM32F4 Discovery Board  
+**Performance Verified**: ✅ Real-time execution confirmed
