@@ -20,7 +20,7 @@ y = evalfis(fis,x,opt);
 
 The build declares a variable-length filename and input vector, then runs `codegen -config cfg opkene -args {fileName,x}` for C. Selecting `cfg.TargetLang = 'C++'` generates C++ with the corresponding application wrapper. The archived scripts show the custom entry files and include paths used for each build. [C generation recipe](generation/runn.m) · [C++ generation recipe](matlab-cpp/runn.m) · [Paper, Section 3.1](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=3)
 
-For the STM32F469 integration, all 107 original C and header files had counterparts in the board project. After line-ending normalization, 98 were identical. For an illustrated example of designing a fuzzy controller in MATLAB and Simulink, see the membership functions and controller diagrams in this community discussion. [Illustrated controller design on MATLAB Answers](https://www.mathworks.com/matlabcentral/answers/2064062-how-to-setup-fuzzy-control)
+For the STM32F469 integration, all 107 original C and header files had counterparts in the board project. After line-ending normalization, 98 were identical.
 
 ## Embedded implementations
 
@@ -59,23 +59,34 @@ To follow the Digix implementation, open `ArduFuzzy.ino` in the Arduino IDE, sel
 
 ## Manual model entry and an IoT update
 
-The two photographs from the original project notes illustrate manual model authoring. In the tipping example, the upper plots show the membership functions for the inputs *service* and *food* and the output *tip*. The lower panel contains the IF–THEN rules. The paper discusses **QtFuzzyLite** for graphical model entry and FIS export. **eFLL** provides a C++ API in which the application constructs the model in code. [QtFuzzyLite editor](https://fuzzylite.com/QtFuzzyLite/) · [eFLL library](https://github.com/alvesoaj/eFLL)
+The three MATLAB® screenshots below show how to specify a fuzzy inference system (FIS). In this example, `avr` is a Mamdani controller with one input and one output. Each screenshot opens at full size.
+
+| Choose the inference settings | Define the membership functions | Enter the rules |
+| --- | --- | --- |
+| [![Fuzzy Logic Designer showing the avr input, Mamdani controller and output][avr-system]][avr-system] | [![Membership Function Editor showing seven input terms, with the EL trapezoid selected][avr-terms]][avr-terms] | [![Rule Editor showing seven rules, with the rule mapping L to F selected][avr-rules]][avr-rules] |
+| The controller uses minimum for implication, maximum for aggregation and centroid defuzzification. | The input spans −0.1 to 1. The four breakpoints for the `EL` trapezoid are `[-0.1, -0.1, 0.025, 0.15]`. | The highlighted rule reads `IF input IS L THEN output IS F`, with weight 1. |
+
+[avr-system]: https://www.mathworks.com/matlabcentral/answers/uploaded_files/1576567/image.png
+[avr-terms]: https://www.mathworks.com/matlabcentral/answers/uploaded_files/1576572/image.png
+[avr-rules]: https://www.mathworks.com/matlabcentral/answers/uploaded_files/1576582/image.png
+
+*Screenshots posted by anhpham in “How to setup fuzzy control,” MATLAB Answers, 26 December 2023. The contributor’s images are shown unmodified under CC BY-SA 3.0. The MATLAB and Fuzzy Logic Toolbox interface is © The MathWorks, Inc.* [Original post](https://www.mathworks.com/matlabcentral/answers/2064062-how-to-setup-fuzzy-control) · [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) · [MATLAB Central terms](https://www.mathworks.com/matlabcentral/content/terms-of-use.html)
+
+To create a similar `.fis` file in **QtFuzzyLite**, enter the input and output ranges, give each membership function its name, shape and breakpoints, then enter the rules and select the inference methods. For example, create the input term `L` and output term `F` before entering the highlighted rule. Export the controller in FIS format and check its outputs at known inputs before loading it on the board. The generated C or C++ evaluator can then use that file. [QtFuzzyLite editor](https://fuzzylite.com/QtFuzzyLite/) · [FuzzyLite FIS export](https://github.com/fuzzylite/fuzzylite/blob/main/fuzzylite.1)
+
+The project’s phone photographs show a different controller. Its inputs are *service* and *food*, and its output is *tip*. The plots show the membership functions above the rule list. In the paper’s proposed workflow, QtFuzzyLite runs on a desktop that the phone controls remotely. **eFLL** is a separate C++ library for defining a model in application code. [eFLL library](https://github.com/alvesoaj/eFLL)
 
 ![Phone displaying the tipping model’s input and output membership functions above its rule list](images/phone-membership-functions.jpg)
 
-*The phone view shows how membership functions and linguistic rules can be presented together.*
-
 [Second photograph showing the rule-entry area](images/phone-rule-entry.jpg)
 
-On the ESP32 side, setup reads the stored model (`/spiffs/ti.fis`) and input data (`/spiffs/x.txt`) and calls inference. After setup, the sketch handles FTP requests. [ESP32 sketch](matlab-cpp/mainn.ino) · [File access and inference wrapper](matlab-cpp/opkene_main.cpp)
-
-An Android phone or iPhone could serve as the operator’s terminal wherever the desktop and target are reachable over the network. The paper proposes the following workflow.
+An Android phone or iPhone could serve as the operator’s terminal wherever the desktop and target are reachable over the network.
 
 1. **Compose the model.** From a remote-desktop app on the phone, operate QtFuzzyLite running on a desktop computer. Set the variable ranges and membership functions, then enter rules such as `IF service is excellent THEN tip is generous`. Export the finished controller as a compatible `.fis` file.
 2. **Transfer the file.** Make the exported file available to the phone, then use an Android or iOS FTP client to upload it to the embedded device over a local network or an Internet connection that reaches the device. Remote desktop provides the editing controls. FTP carries the completed file.
 3. **Activate the controller.** The target application would validate the received file, load it into the generated C or C++ evaluator, and check an output. This would let an operator change compatible controller rules remotely without rebuilding the device firmware.
 
-The photographs illustrate the authoring interface. The archived ESP32 sketch implements FTP service and evaluates its stored model at startup. It would need a reload step to activate a later upload. End-to-end phone transfer and activation were proposed in the paper. [Published workflow, Figure 5 and Section 5.4](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=17)
+The archived ESP32 sketch reads `/spiffs/ti.fis` and `/spiffs/x.txt` at startup, runs inference, then handles FTP requests. Activating a file uploaded during operation would require a reload step. The paper presents end-to-end phone transfer and activation as a proposed workflow. [ESP32 sketch](matlab-cpp/mainn.ino) · [File access and inference wrapper](matlab-cpp/opkene_main.cpp) · [Published workflow, Figure 5 and Section 5.4](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=17)
 
 <a href="https://docs.espressif.com/projects/esp-idf/en/v3.3.5/get-started/get-started-devkitc.html"><img src="https://raw.githubusercontent.com/espressif/esp-idf/v3.3.5/docs/_static/esp32-devkitc-functional-overview-f.jpeg" alt="Espressif’s annotated ESP32-DevKitC V4 reference board" width="500"></a>
 
