@@ -22,6 +22,13 @@ The build declares a variable-length filename and input vector, then runs `codeg
 
 For the STM32F469 integration, all 107 original C and header files had counterparts in the board project. After line-ending normalization, 98 were identical.
 
+### Example models used in the paper
+
+Each `.fis` file supplies the membership functions and rules that the generated code evaluates. The paper uses two MATLAB Fuzzy Logic Toolbox models to show that one compiled evaluator can switch from a controller with one output to a controller with two outputs by loading a different file. [Model-switching experiment, Section 4.2.2](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=11)
+
+- **`tipper.fis`** is the restaurant-tipping example supplied by MathWorks. Three rules turn service and food ratings into a suggested tip percentage. The paper uses this familiar example for the Digix and Raspberry Pi runs. [Model file](generation/tipper.fis) · [MathWorks tipping example](https://www.mathworks.com/help/fuzzy/building-systems-with-fuzzy-logic-toolbox-software.html)
+- **`fismat.fis`** is the predator–prey example used with the toolbox in this project. Four rules take the current prey and predator populations and return a recommended change for each. The paper uses this model in the STM32 work and as the two-output case in the switching experiment. [Model file](generation/fismat.fis) · [STM32 application, Section 4.1](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=9)
+
 ## Embedded implementations
 
 | Target | How the application uses fuzzy inference | What the project records |
@@ -41,7 +48,7 @@ The paper cites an STM32F469 implementation that reads an embedded fuzzy model f
 
 The archived timing runs used a **Raspberry Pi 3 Model B**, identified by hardware revision `a02082`. The run notes in `07_records/Pi_original_notes.md` record a 64-bit ARM Cortex-A53, Debian GNU/Linux 13 (*Trixie*) and Raspberry Pi kernel `6.12.47+rpt-rpi-v8` (`aarch64`). Use 64-bit Raspberry Pi OS based on Trixie to match that environment. The build uses GCC in C11 mode, GNU Make and the system math library. [Raspberry Pi revision codes](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use) · [Project Makefile](platforms/raspberry-pi/Makefile)
 
-On the Pi, install `build-essential` if GCC and Make are missing. From the root of a downloaded or cloned copy of this repository, these commands build the example and evaluate **service = 2** and **food = 10**.
+On the Pi, install `build-essential` if GCC and Make are missing. The Pi project calls its copy of the MathWorks tipping example `disk_tipper.fis`. From the repository root, these commands build the runner and evaluate **service = 2** and **food = 10**.
 
 ```sh
 cd platforms/raspberry-pi
@@ -96,7 +103,7 @@ The archived ESP32 sketch reads `/spiffs/ti.fis` and `/spiffs/x.txt` at startup,
 
 | Browse | Contents |
 | --- | --- |
-| [Generation inputs](generation/) | MATLAB entry point, original C build script, application entry file and two example FIS files. |
+| [Generation inputs](generation/) | MATLAB entry point, original C build script, application entry file and the [tipping](generation/tipper.fis) and [predator–prey](generation/fismat.fis) example models. |
 | [MATLAB-generated C](matlab-c/) | All 52 C source files and 55 headers. [Open the C entry point](opkene.c). |
 | [MATLAB-generated C++](matlab-cpp/) | The original MATLAB Coder 5.1 export from 20 February 2021 contains 42 C++ source files and 47 headers. [Open the native C++ entry point](matlab-cpp/opkene.cpp). |
 | [ESP32 application](platforms/esp32/) | Complete historical Arduino project with the board-adapted evaluator, SPIFFS file access and Wi-Fi/FTP support. Also available in `09_esp32/` in the source ZIP. [Open the sketch](platforms/esp32/mainn.ino). |
