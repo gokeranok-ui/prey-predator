@@ -6,6 +6,14 @@
 
 [MATLAB-generated C](opkene.c) · [MATLAB-generated C++](opkene.cpp) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
 
+If this paper, code, or model helps you in your research, please cite Goker Ariyak’s article in *Electronics* 15(22), 5297 (2026). Thank you for crediting this work. [DOI 10.3390/electronics15225297](https://doi.org/10.3390/electronics15225297) · [Email Goker ARIYAK](https://gokeranok-ui.github.io/prey-predator/#contact)
+
+### STM32F469 companion project
+
+The [companion repository](https://github.com/gokeranok-ui/gpt) contains the STM32F469 firmware described in Section 6 and Table 10 of the paper. At commit `65209fe`, `gpt/Core/Src/opkene.c` is the MATLAB-generated C entry point. The board adapter in `gpt/Core/Src/fis_virtual_fs.c` lets the parser open an embedded copy of `fismat.fis` by name.
+
+The companion repository requires access. Anyone can download the [public source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip). Open `02_original_core/` for the original generated C and headers, or `03_stm32f469/Core/Src/` for the later board implementation that loads a model from an SD card.
+
 ## 📖 Project Story
 
 The project draws on fuzzy control of predator and prey populations. The repository includes an AI-generated reproduction of the background reading. The exposition presents a theoretical framework for using fuzzy logic to control ecological population dynamics in predator-prey systems, and we wondered: *"Can we implement this on a real embedded system?"*
@@ -290,7 +298,7 @@ This implementation serves as a **proof-of-concept** showing that:
 
 **Goker ARIYAK**
 
-GitHub: [@gokeranok-ui](https://github.com/gokeranok-ui)
+[Email the author](https://gokeranok-ui.github.io/prey-predator/#contact) · [GitHub profile](https://github.com/gokeranok-ui)
 
 ## 📄 License
 

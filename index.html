@@ -14,6 +14,8 @@
     nav [aria-current] {font-weight:700}
     h1 {font-family:"STIX Two Text",Georgia,serif;font-weight:500;font-size:clamp(1.55rem,3.8vw,2.8rem);line-height:1.14;max-width:34em;margin:1rem 0 .45rem}
     .details {display:flex;flex-wrap:wrap;gap:.4rem 1.15rem;margin:0 0 .9rem;align-items:baseline;font-size:.96rem}
+    .reader-note {max-width:82ch;margin:.65rem 0;line-height:1.45}
+    .reader-note:last-of-type {margin-bottom:1rem}
     iframe {display:block;width:100%;height:78vh;height:78dvh;min-height:26rem;border:1px solid #89979c;background:#fff;margin-bottom:1rem}
     @media(max-width:45rem) {iframe {height:71vh;min-height:20rem} }
   </style>
@@ -26,8 +28,17 @@
   </nav></header>
   <main>
     <h1>Reusable MATLAB-Generated Fuzzy Inference for Embedded Electronics: Integration in C and C++</h1>
-    <p class="details"><span>Goker ARIYAK · Electronics 15 (2026), 5297 · 21 pages</span> <a href="https://doi.org/10.3390/electronics15225297">Publisher and DOI</a> <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> <a href="electronics-15-05297.pdf">Open full PDF</a></p>
+    <p class="details"><span>Goker ARIYAK · <i>Electronics</i> 15(22), 5297 (2026)</span> <span id="contact" tabindex="-1"><span id="author-address">gokeranok [at] gmail [dot] com</span></span> <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> <a href="electronics-15-05297.pdf">Open full PDF · 21 pages</a></p>
+    <p class="reader-note" id="cite">If the paper, code, or models help you in your research, please cite the published article. Thank you for crediting this work. <a href="https://doi.org/10.3390/electronics15225297">DOI 10.3390/electronics15225297</a></p>
+    <p class="reader-note">The <a href="https://github.com/gokeranok-ui/gpt">STM32F469 companion repository</a> (access required) shows how the generated C engine reads a fuzzy model from board memory. The <a href="https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip">public source ZIP</a> includes the later SD-card implementation in <code>03_stm32f469/</code>.</p>
     <iframe title="Reusable MATLAB-Generated Fuzzy Inference for Embedded Electronics: Integration in C and C++ — full PDF" src="electronics-15-05297.pdf#view=FitH"></iframe>
   </main>
+  <script>
+    const address = document.getElementById("author-address");
+    const link = document.createElement("a");
+    link.href = "mailto:" + address.textContent.replace(" [at] ", "@").replace(" [dot] ", ".");
+    link.textContent = "Email Goker ARIYAK";
+    address.replaceWith(link);
+  </script>
 </body>
 </html>
