@@ -35,7 +35,7 @@ The historical board runs used different models and timed different operations. 
 
 ### STM32F469 companion project
 
-The **public gpt folder** contains the SD-card version of the board project and can be browsed without signing in. The paper also cites an earlier board-memory revision (`65209fe`) in the separate private repository `gokeranok-ui/gpt`. [Open the public project](https://github.com/gokeranok-ui/prey-predator/tree/main/gpt) · [Application sources](gpt/Core/Src/) · [Headers](gpt/Core/Inc/) · [SD-card adapter](gpt/Core/Src/fis_virtual_fs.c)
+The paper cites an STM32F469 implementation that reads an embedded fuzzy model from board memory. You can browse that version in the [original gpt repository](https://github.com/gokeranok-ui/gpt) or open the [exact revision cited in the paper](https://github.com/gokeranok-ui/gpt/tree/65209fef3511e48a088f6ba5c06afdf459537119). The board project included here is the later version that reads its model from an SD card. [SD-card project](https://github.com/gokeranok-ui/prey-predator/tree/main/gpt) · [Application sources](gpt/Core/Src/) · [Headers](gpt/Core/Inc/) · [SD-card adapter](gpt/Core/Src/fis_virtual_fs.c)
 
 ### Build the Raspberry Pi example
 
