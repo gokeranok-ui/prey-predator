@@ -1,311 +1,81 @@
-# Prey-Predator Fuzzy Logic Control System
+# Reusable MATLAB-generated fuzzy inference in C and C++
 
-[![GitHub](https://img.shields.io/badge/GitHub-gokeranok--ui-blue?logo=github)](https://github.com/gokeranok-ui)
+A fuzzy controller can store its rules in a model file and evaluate them with a reusable library. This project uses MATLAB Coder to generate native C or C++ from a short Fuzzy Logic Toolbox function. An embedded application supplies a compatible `.fis` file and an input vector, calls the generated evaluator, and receives the outputs. To port the code, the developer builds it with the target compiler and connects it to the target’s memory, file access and hardware I/O.
 
-[Published Electronics article](https://gokeranok-ui.github.io/prey-predator/) · [Predator–prey paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html)
+[Browse MATLAB-generated C](matlab-c/) · [Browse MATLAB-generated C++](matlab-cpp/) · [Download the source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
 
-[Browse MATLAB-generated C](matlab-c/) · [Browse MATLAB-generated C++ for ESP32](matlab-cpp/) · [Browse the STM32F469 project (gpt)](gpt/) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
+[Read the published article](https://gokeranok-ui.github.io/prey-predator/) · [Read the predator–prey background paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html) · [Email Goker ARIYAK](https://gokeranok-ui.github.io/prey-predator/#contact)
 
-If this paper, code, or model helps you in your research, please cite Goker Ariyak’s article in *Electronics* 15(22), 5297 (2026). Thank you for crediting this work. [DOI 10.3390/electronics15225297](https://doi.org/10.3390/electronics15225297) · [Email Goker ARIYAK](https://gokeranok-ui.github.io/prey-predator/#contact)
+## From a MATLAB function to native source
+
+The MATLAB entry point takes the model filename at run time. The first call below reads the fuzzy inference system (FIS), the second selects 51 output sample points for Mamdani defuzzification, and the third evaluates the inputs. [Original MATLAB function](generation/opkene.m)
+
+```matlab
+fis = getFISCodeGenerationData(fileName);
+opt = evalfisOptions('NumSamplePoints',51);
+y = evalfis(fis,x,opt);
+```
+
+The build declares a variable-length filename and input vector, then runs `codegen -config cfg opkene -args {fileName,x}` for C. Selecting `cfg.TargetLang = 'C++'` generates C++ with the corresponding application wrapper. The archived scripts show the custom entry files and include paths used for each build. [C generation recipe](generation/runn.m) · [C++ generation recipe](matlab-cpp/runn.m) · [Paper, Section 3.1](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=3)
+
+The generated sources contain the model parser, membership functions, rule evaluation and output calculation for supported type-1 Mamdani and Sugeno models. Passing the filename at run time lets the same executable evaluate different compatible models without regenerating its source. For the STM32F469 integration, all 107 original C and header files had counterparts in the board project. After line-ending normalization, 98 were identical.
+
+## Embedded implementations
+
+| Target | How the application uses fuzzy inference | What the project records |
+| --- | --- | --- |
+| [STM32F469 · STM32CubeIDE](gpt/) | The application calls generated C and presents a model file to the parser. The public version reads from an SD card using FatFs. | An archived board run and a comparison of the generated files with the board sources. |
+| [Digix SAM3X8E · Arduino](platforms/ArduFuzzy/) | The Arduino C++ sketch calls the generated C runtime through `extern "C"`. The sketch handles serial and display I/O. | Physical execution of the `tipper.fis` model on the 84 MHz SAM board using Arduino Due support. |
+| [Raspberry Pi 3 Model B · Linux](platforms/raspberry-pi/) | GCC and Make build the generated C and its runner into `fuzzy_cli`. The command-line application accepts a model path and numeric inputs. | Ten archived runner calls averaged **3.0262 ms**, including model parsing and allocation. |
+| [ESP32 · Arduino](matlab-cpp/mainn.ino) | The sketch calls the generated C++ evaluator with model and input files in SPIFFS. The main loop services an FTP server over Wi-Fi. | The integration source and a firmware inventory for a DOIT ESP32 DevKit V1. Physical inference and a complete network model update remain unverified. |
+
+The historical board runs used different models and timed different operations. The later validation work identified a file-reading defect that could skip the final rule. On the corrected host build, one executable completed 1,000 tipper–FISMAT–tipper cycles and checked all 3,000 evaluations. The paper reports the board records and the corrected host results separately. [Board results, Table 3](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=8) · [File-reading corrections and model switching](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=11)
 
 ### STM32F469 companion project
 
-The [public gpt folder](gpt/) contains the STM32F469 project distributed in the source ZIP. Start with the [board source files](gpt/Core/Src/), [headers](gpt/Core/Inc/), or [SD-card file adapter](gpt/Core/Src/fis_virtual_fs.c).
+Start with the [public board sources](gpt/Core/Src/), [headers](gpt/Core/Inc/), or [SD-card adapter](gpt/Core/Src/fis_virtual_fs.c). The [original gpt repository](https://github.com/gokeranok-ui/gpt) also holds the earlier board-memory implementation cited in the paper. That [specific revision](https://github.com/gokeranok-ui/gpt/tree/65209fef3511e48a088f6ba5c06afdf459537119/gpt/Core/Src) requires repository access.
 
-Section 6 and Table 10 also cite an earlier version in the [original gpt repository](https://github.com/gokeranok-ui/gpt) (access required). At [commit `65209fe`](https://github.com/gokeranok-ui/gpt/tree/65209fef3511e48a088f6ba5c06afdf459537119/gpt/Core/Src), the file adapter serves an embedded copy of `fismat.fis` from board memory. The public folder contains the later SD-card version.
+## Manual model entry and an IoT update
 
-## 📖 Project Story
+The two photographs from the original project notes illustrate manual model authoring. In the tipping example, the upper plots show the membership functions for the inputs *service* and *food* and the output *tip*. The lower panel contains the IF–THEN rules. The paper discusses **QtFuzzyLite** for graphical model entry and FIS export. **eFLL** provides a C++ API in which the application constructs the model in code. [QtFuzzyLite editor](https://fuzzylite.com/QtFuzzyLite/) · [eFLL library](https://github.com/alvesoaj/eFLL)
 
-The project draws on fuzzy control of predator and prey populations. The repository includes an AI-generated reproduction of the background reading. The exposition presents a theoretical framework for using fuzzy logic to control ecological population dynamics in predator-prey systems, and we wondered: *"Can we implement this on a real embedded system?"*
+![Phone displaying the tipping model’s input and output membership functions above its rule list](images/phone-membership-functions.jpg)
 
-### The Journey
+*The phone view shows how membership functions and linguistic rules can be presented together.*
 
-**From Paper to Prototype**
+[Second photograph showing the rule-entry area](images/phone-rule-entry.jpg)
 
-The journey began with reading the research paper, which described a Mamdani-type fuzzy inference system for managing predator and prey populations. The elegance of the approach—using linguistic rules instead of complex mathematical models—inspired us to create a practical implementation.
+On the ESP32 side, setup reads the stored model (`/spiffs/ti.fis`) and input data (`/spiffs/x.txt`) and calls inference. After setup, the sketch handles FTP requests. [ESP32 sketch](matlab-cpp/mainn.ino) · [File access and inference wrapper](matlab-cpp/opkene_main.cpp)
 
-**Simulink + Waijung Blockset: A Successful Approach**
+In the proposed IoT workflow, an operator would use a phone to control the desktop editor, define membership functions, and enter rules such as `IF service is excellent THEN tip is generous`. The desktop editor would export the compatible `.fis` file, and an FTP client would transfer it to the target. The receiving application would validate the model, explicitly load it, and check an output. The photographs illustrate the editing step. The archived sketch supplies the FTP service, while end-to-end transfer and activation still require testing. [Published workflow, Figure 5 and Section 5.4](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=17)
 
-We chose to implement this using **MATLAB Simulink** with the **Waijung Blockset**, a tool for embedded code generation targeting STM32 microcontrollers. This choice proved to be highly successful:
+<a href="https://docs.espressif.com/projects/esp-idf/en/v3.3.5/get-started/get-started-devkitc.html"><img src="https://raw.githubusercontent.com/espressif/esp-idf/v3.3.5/docs/_static/esp32-devkitc-functional-overview-f.jpeg" alt="Espressif’s annotated ESP32-DevKitC V4 reference board" width="500"></a>
 
-- ✅ **Graphical Modeling**: Visual representation of the fuzzy logic system
-- ✅ **Automatic Code Generation**: From Simulink model to production-ready C code
-- ✅ **Hardware Integration**: Direct support for LCD displays, buttons, and other peripherals
-- ✅ **Real-Time Execution**: Successfully deployed on STM32F4 Discovery board
+*ESP32 hardware reference from Espressif’s DevKitC V4 guide. The project’s own firmware inventory identifies a DOIT ESP32 DevKit V1.* [Board guide](https://docs.espressif.com/projects/esp-idf/en/v3.3.5/get-started/get-started-devkitc.html) · [Archived firmware inventory](matlab-cpp/firmware_inventory.json)
 
-**Hardware Realization**
+## Predator–prey controller on STM32F407
 
-The fuzzy logic controller was successfully implemented on the **STM32F4 Discovery board** (STM32F407VG, Cortex-M4 @ 168 MHz). The system uses:
+The repository takes its name from a complementary Simulink/Waijung example. This model generates a dedicated STM32F407 application for a four-rule Mamdani controller. Its inputs are prey and predator populations, and its two outputs are the recommended changes in those populations. The board model starts with 3,200 prey and 1,300 predators. [Simulink board model](PreyPredator/Prey_Predator_STM32F4.slx) · [Desktop model](PreyPredator/Presentation.mdl) · [FIS definition](PreyPredator/fismat.fis)
 
-- **LCD Display**: 16x2 Character LCD with keypad shield for real-time visualization
-- **Interactive Control**: Button inputs for testing different scenarios
-- **Real-Time Feedback**: Live display of fuzzy inference outputs
+![STM32F407 Discovery prototype connected to the LCD keypad shield](Prey_Predator_STM32FDISCO.jpg)
 
-![STM32F4 Discovery Board with LCD Keypad Shield](Prey_Predator_STM32FDISCO.jpg)
+*The STM32F407 Discovery prototype displays the controller output on its LCD. At 168 MHz, the complete application step averaged **7.67467 ms** over 10,000 steps, including inference, formatting, LCD updates and GPIO operations.* [Table 4](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=10) · [Simulink diagram](sim1.jpg) · [Waijung build window](SH1.jpg) · [LCD pinout](LCD_specs.jpg)
 
-*Figure 1: STM32F4 Discovery board successfully running the prey-predator fuzzy controller with LCD keypad shield*
+## Repository structure
 
-### Alternative Hardware Configurations
+| Browse | Contents |
+| --- | --- |
+| [Generation inputs](generation/) | MATLAB entry point, original C build script, application entry file and two example FIS files. |
+| [MATLAB-generated C](matlab-c/) | All 52 C source files and 55 headers. [Open the C entry point](opkene.c). |
+| [MATLAB-generated C++](matlab-cpp/) | Generated C++ sources and headers, with the archived ESP32 application alongside them. [Open the C++ entry point](opkene.cpp). |
+| [STM32F469](gpt/) · [SAM3X8E](platforms/ArduFuzzy/) · [Raspberry Pi](platforms/raspberry-pi/) | Browsable native projects from the public source release. |
+| [Predator–prey models](PreyPredator/) | Simulink desktop and STM32F407 board models and the FIS definition. |
+| [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip) | Source, supporting records, component notices and file checksums. |
 
-**16-Pin LCD Configuration**
+## Citation and author
 
-The project can also work with standard 16-pin LCD modules. The Simulink model and generated code support both configurations:
+If the source, models, or measurements help you in your work, please cite the accompanying article. Thank you for crediting the research.
 
-- 4-bit parallel interface (current implementation)
-- Full 8-bit parallel interface (configurable)
+Goker ARIYAK. “Reusable MATLAB-Generated Fuzzy Inference for Embedded Electronics: Integration in C and C++.” *Electronics* **15**(22), 5297 (2026). [DOI 10.3390/electronics15225297](https://doi.org/10.3390/electronics15225297) · [Full article PDF](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf) · [Contact the author](https://gokeranok-ui.github.io/prey-predator/#contact)
 
-**I2C Module Option**
-
-To reduce cable complexity and simplify wiring, you can use an **I2C LCD backpack module** connected to the STM32F4 Discovery board's I2C interface. This approach:
-
-- Reduces wiring from 6+ wires to just 2 (SDA and SCL)
-- Provides cleaner hardware setup
-- Maintains full functionality
-
-![LCD Specifications](LCD_specs.jpg)
-
-*Figure 2: LCD specifications and pinout information*
-
-## 🎯 Project Overview
-
-This project demonstrates a **fuzzy logic control system for predator-prey population dynamics** running on an embedded STM32F4 microcontroller. The system:
-
-- Takes two inputs: **Prey population** (X1) and **Predator population** (X2)
-- Produces two outputs: **Recommended change in Prey** (ΔX1) and **Recommended change in Predator** (ΔX2)
-- Uses **Mamdani fuzzy inference** with centroid defuzzification
-- Uses a configured 10 ms model period (100 Hz)
-
-### Fuzzy System Specifications
-
-**Input Variables:**
-- **X1 (Prey)**: Range [0, 5000] with 5 membership functions (S, MS, M, ML, L)
-  - **Default Implementation Value**: 3200
-- **X2 (Predator)**: Range [0, 3000] with 5 membership functions (S, MS, M, ML, L)
-  - **Default Implementation Value**: 1300
-
-**Output Variables:**
-- **ΔX1 (Change in Prey)**: Range [-800, 800]
-- **ΔX2 (Change in Predator)**: Range [-400, 400]
-
-**Inference Rules:** 4 fuzzy rules implementing ecological control logic
-
-### Default Implementation Values
-
-This project was implemented using the following input values:
-- **Prey Population (X1)**: **3200**
-- **Predator Population (X2)**: **1300**
-
-These values are within the admissible region defined by the fuzzy logic system's membership functions and provide a good demonstration of the control system behavior.
-
-### Modifying Input Values
-
-Users can modify these input values within the admissible region (as defined by the fuzzy system's input ranges) by following these steps:
-
-1. **Open the Simulink Model:**
-   - Open `PreyPredator/Prey_Predator_STM32F4.slx` in MATLAB Simulink
-
-2. **Locate the Constant Blocks:**
-   - Find the two constant blocks currently set to:
-     - **3200** (for Prey population)
-     - **1300** (for Predator population)
-
-3. **Replace with Memory Blocks L and M:**
-   - Replace the constant block for Prey (3200) with a **Memory block labeled L**
-   - Replace the constant block for Predator (1300) with a **Memory block labeled M**
-   - Assign new values to memory blocks L and M within the admissible ranges:
-     - **Memory Block L (Prey)**: Any value in range [0, 5000]
-     - **Memory Block M (Predator)**: Any value in range [0, 3000]
-
-4. **Rebuild the Model:**
-   - After modifying the memory blocks, rebuild the Simulink model (Ctrl+B)
-   - The generated code will use the new values assigned to memory blocks L and M
-
-**Note:** Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values. This approach allows flexible testing of different predator-prey population scenarios while maintaining the system's fuzzy logic control structure within the admissible region.
-
-## ⚡ Performance Metrics
-
-### STM32F407 application-step timing
-
-On the STM32F407 at 168 MHz, the complete Waijung application step averaged **7.67467 ms** over 10,000 steps after 10 warmup steps. The observed maximum was **7.73465 ms**. Each timed call to `Prey_Predator_STM32F4_step()` includes fuzzy inference, text formatting, LCD updates and GPIO operations. Inference-only latency and processor utilization were not measured separately. [Table 4 of the published paper](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=10).
-
-![Simulink block diagram of the STM32F4 predator–prey controller](sim1.jpg)
-
-*Figure 3. Simulink model of the predator–prey controller, including its inputs, fuzzy controller and display blocks.*
-
-![Waijung build window in Simulink](SH1.jpg)
-
-*Figure 4. Waijung build window showing source generation, packaging and compilation for the STM32F4 target.*
-
-## 🛠️ Technical Implementation
-
-### Toolchain
-
-- **MATLAB R2025a** with Simulink
-- **Waijung Blockset 18.11a** for STM32F4 target
-- **GNU ARM Embedded Toolchain** for compilation
-- **ST-Link** for programming
-
-### Code Generation
-
-The project demonstrates successful **Model-Based Design** workflow:
-
-1. **Modeling**: Fuzzy logic system designed in Simulink using Waijung blocks
-2. **Code Generation**: Automatic C code generation using Real-Time Workshop (RTW)
-3. **Compilation**: Generated code compiled for STM32F4 target
-4. **Deployment**: Binary flashed to hardware and tested in real-time
-
-**Generated Code Structure:**
-- `Prey_Predator_STM32F4.c`: Main fuzzy logic implementation (~4,000 lines)
-- `main.c`: Real-time execution loop with SysTick interrupt
-- `Prey_Predator_STM32F4_data.c`: Membership function parameters and rule base
-- Hardware driver libraries: Waijung HAL drivers for LCD and I/O
-
-### Fuzzy Logic Implementation
-
-The system implements a complete Mamdani fuzzy inference engine:
-
-1. **Fuzzification**: Input values converted to membership degrees (10 MFs total)
-2. **Rule Evaluation**: 4 rules evaluated using MIN operator for AND logic
-3. **Implication**: Rule consequents clipped using MIN operator
-4. **Aggregation**: Rule outputs combined using MAX operator
-5. **Defuzzification**: Centroid method with 101 sample points per output
-
-## 📁 Repository Structure
-
-[Published Electronics article](https://gokeranok-ui.github.io/prey-predator/) · [Predator–prey paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html)
-
-[Browse MATLAB-generated C](matlab-c/) · [Browse MATLAB-generated C++ for ESP32](matlab-cpp/) · [Browse the STM32F469 project (gpt)](gpt/) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
-
-The C folder contains all 52 source files and 55 headers from `02_original_core/` in the ZIP. The C++ folder contains the generated sources and headers alongside the ESP32 integration files from `09_esp32/`. To open the inference entry point directly, see [opkene.c](opkene.c) or [opkene.cpp](opkene.cpp).
-
-```
-prey-predator/
-├── electronics-15-05297.pdf            # Published Electronics article
-├── matlab-c/                           # Original MATLAB Coder C sources and headers
-├── matlab-cpp/                         # MATLAB Coder C++ sources and ESP32 integration
-├── gpt/                                # Public STM32F469 project from the source ZIP
-├── opkene.c                            # Generated C entry point
-├── opkene.cpp                          # Generated C++ entry point
-├── Fuzzy_Inference_Source.zip          # Source and supporting files
-├── README.md                           # This file
-├── prey.pdf                            # AI-generated reproduction
-├── Prey_Predator_STM32FDISCO.jpg       # Hardware setup photo
-├── LCD_specs.jpg                       # LCD specifications
-├── sim1.jpg                            # Simulink model diagram
-├── SH1.jpg                             # Waijung build window
-├── PreyPredator/                       # Simulink project files
-│   ├── Prey_Predator_STM32F4.slx       # Main Simulink model
-│   ├── fismat.fis                      # Fuzzy Inference System definition
-│   └── Presentation.mdl                # Desktop Simulink model
-└── [additional documentation...]
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- MATLAB R2025a (or compatible version) with Simulink
-- Waijung Blockset 18.11a installed
-- STM32F4 Discovery Board
-- 16x2 LCD with keypad shield (or standard 16-pin LCD)
-- ST-Link programmer
-- Optional: I2C LCD backpack module for simplified wiring
-
-### Building the Project
-
-1. **Open Simulink Model**:
-   ```matlab
-   open('PreyPredator/Prey_Predator_STM32F4.slx')
-   ```
-
-2. **Build for STM32F4**:
-   - Select Waijung STM32F4 target
-   - Press `Ctrl+B` to build
-   - Generated code will be in `Prey_Predator_STM32F4_stm32f4/` directory
-
-3. **Flash to Hardware**:
-   - Use ST-Link utility to flash the generated `.hex` file
-   - Connect LCD and buttons according to pin mapping
-
-4. **Run**:
-   - System starts automatically with default input values (Prey: 3200, Predator: 1300)
-   - LCD displays fuzzy inference outputs in real-time
-   - To modify input values, edit the Simulink model as described in the "Modifying Input Values" section above
-
-### Hardware Connections
-
-**LCD Keypad Shield (Current Setup):**
-- RS: PE7
-- Enable: PE9
-- Data (D4-D7): PE12-PE15
-
-**Alternative: Standard 16-Pin LCD**
-- Same pin mapping as above, or
-- Configure for 8-bit mode if desired
-
-**Alternative: I2C LCD Module**
-- Connect to I2C1 or I2C2 on STM32F4 Discovery
-- Modify Simulink model to use I2C LCD block
-- Requires I2C LCD library driver
-
-## 📊 Research Contributions
-
-This project demonstrates:
-
-1. **✅ Successful Code Generation**: From Simulink graphical models to embedded C code
-2. **✅ Board timing**: Measured the complete application step on the STM32F407
-3. **✅ Practical Application**: Ecological control system running on embedded hardware
-4. **✅ Alternative Workflow**: Model-based design for fuzzy logic systems
-
-### For Journal Publication
-
-This implementation serves as a **proof-of-concept** showing that:
-
-- Fuzzy logic controllers can be deployed on embedded systems via graphical modeling tools
-- Simulink with Waijung Blockset provides a viable path from model to hardware
-- The approach is accessible to engineers familiar with Simulink but new to embedded C programming
-
-## 📚 References
-
-1. [Fuzzy Logic Control for Predator–Prey Systems (Reproduced and Modernized Exposition)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html). AI-generated reproduction.
-
-2. **Waijung Blockset Documentation**: [https://waijung.aimagin.com/](https://waijung.aimagin.com/)
-
-3. **STM32F4 Discovery Board User Manual**: STMicroelectronics
-
-4. **MATLAB Simulink Real-Time Workshop**: MathWorks Documentation
-
-## 📝 Notes
-
-- This code is **auto-generated** from Simulink model using MATLAB Real-Time Workshop
-- The fuzzy logic implementation follows **Mamdani inference** methodology
-- **Input Modification**: Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values
-
-## 👤 Author
-
-**Goker ARIYAK**
-
-[Email the author](https://gokeranok-ui.github.io/prey-predator/#contact) · [GitHub profile](https://github.com/gokeranok-ui)
-
-## 📄 License
-
-This project includes code generated from MATLAB/Simulink and Waijung Blockset. Please refer to:
-- MATLAB/Simulink licensing terms (MathWorks)
-- Waijung Blockset licensing terms
-- STMicroelectronics HAL driver licensing (SLA0044)
-
-The published article is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The AI reproduction is outside the project's MIT grant. Generated source and the source ZIP retain their applicable component terms. See [LICENSE](LICENSE).
-
-## 🙏 Acknowledgments
-
-- **Bojadziev** for the inspiring research paper on fuzzy control for predator-prey systems
-- **Waijung Blockset team** for providing excellent embedded code generation tools
-- **STMicroelectronics** for STM32F4 Discovery board and HAL drivers
-- **MathWorks** for MATLAB Simulink and Real-Time Workshop
-
----
-
-**Last Updated**: November 14, 2026  
-**Project Status**: [Published in Electronics](https://doi.org/10.3390/electronics15225297)  
-**Hardware Validated**: ✅ STM32F4 Discovery Board  
-**Board timing record** · [Table 4 of the published paper](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=10)
+The repository license describes the MIT grant for author-owned material and the terms that apply to third-party components. The published article is available under CC BY 4.0. The AI reproduction is separate from the MIT grant. [Repository license](LICENSE) · [Article license](https://creativecommons.org/licenses/by/4.0/)
