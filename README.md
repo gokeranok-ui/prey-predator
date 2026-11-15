@@ -2,8 +2,7 @@
 
 [![GitHub](https://img.shields.io/badge/GitHub-gokeranok--ui-blue?logo=github)](https://github.com/gokeranok-ui)
 
-**Repository:** [https://github.com/gokeranok-ui/prey-predator](https://github.com/gokeranok-ui/prey-predator)  
-**Status:** 🔒 Private (Will be made public upon journal publication)
+[MATLAB-generated C](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item6) · [MATLAB-generated C++](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item721) · [Download source archive](https://zenodo.org/records/23355621/files/Fuzzy_Inference_Supporting_Materials.zip?download=1)
 
 ## 📖 Project Story
 
@@ -178,6 +177,8 @@ The system implements a complete Mamdani fuzzy inference engine:
 
 ## 📁 Repository Structure
 
+[MATLAB-generated C](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item6) · [MATLAB-generated C++](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item721) · [Download source archive](https://zenodo.org/records/23355621/files/Fuzzy_Inference_Supporting_Materials.zip?download=1)
+
 ```
 prey-predator/
 ├── README.md                           # This file
@@ -189,11 +190,7 @@ prey-predator/
 ├── PreyPredator/                       # Simulink project files
 │   ├── Prey_Predator_STM32F4.slx       # Main Simulink model
 │   ├── fismat.fis                      # Fuzzy Inference System definition
-│   ├── predator_prey.m                 # Original MATLAB script
-│   └── Prey_Predator_STM32F4_stm32f4/  # Generated C code (843 files)
-│       ├── main.c                      # Entry point with SysTick ISR
-│       ├── Prey_Predator_STM32F4.c     # Main fuzzy logic implementation
-│       └── [other generated files...]
+│   └── predator_prey.m                 # Original MATLAB script
 └── [additional documentation...]
 ```
 
@@ -281,12 +278,6 @@ This implementation serves as a **proof-of-concept** showing that:
 - System runs at **100 Hz** with deterministic execution time
 - **Input Modification**: Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values
 
-## 🔒 Repository Status
-
-**Current Status: PRIVATE**
-
-This repository is currently private and will remain so until the associated research paper is published. Upon publication, the repository will be made public to serve as supplementary material and allow reproducibility of the research.
-
 ## 👤 Author
 
 **ARIYAK**
@@ -312,6 +303,6 @@ See [LICENSE](LICENSE) file for more details.
 ---
 
 **Last Updated**: January 2025  
-**Project Status**: Ready for journal submission  
+**Project Status**: [Published in Electronics](https://doi.org/10.3390/electronics15225297)  
 **Hardware Validated**: ✅ STM32F4 Discovery Board  
 **Performance Verified**: ✅ Real-time execution confirmed
