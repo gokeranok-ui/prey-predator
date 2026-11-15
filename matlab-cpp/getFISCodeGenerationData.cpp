@@ -101,12 +101,11 @@ namespace coder
     int loop_ub;
     boolean_T b_bool;
     boolean_T systemSectionHeaderFound;
-   //printf("CikisSayisi=%i\n", &fis_output);
     fuzzy::internal::codegen::getFileID(name, &fid, &maxLineLength);
     if (maxLineLength < 8.0) {
       maxLineLength = 8.0;
     }
-//printf("Cuneyt=%f\n");
+
     systemSectionHeaderFound = false;
     int exitg2;
     do {
@@ -125,7 +124,7 @@ namespace coder
             fuzzy::internal::codegen::getLine(fid, maxLineLength, nextLineVar);
           }
         }
-//printf("Arkin=%f\n");
+
         b_NULL = NULL;
         filestar = fileManager(fid);
         if (filestar == b_NULL) {

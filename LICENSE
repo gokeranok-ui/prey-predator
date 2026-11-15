@@ -40,7 +40,7 @@ Third-party material
   templates, and STMicroelectronics drivers retain their respective terms.
   In the browsable source folders, LICENSES/Apache-2.0.txt accompanies the
   Arm CMSIS files bearing that notice under gpt/Drivers/CMSIS/Include.
-  LICENSES/GPL-3.0.txt accompanies matlab-cpp/ESP8266FtpServer.cpp and its
+  LICENSES/GPL-3.0.txt accompanies platforms/esp32/ESP8266FtpServer.cpp and its
   header, which identify GPL version 3 or later. Other files retain their
   own notices.
   Check the applicable product or component license for vendor material in

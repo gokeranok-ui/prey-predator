@@ -14,7 +14,7 @@
 #include <cstdlib>
 
 // Function Declarations
-extern int opkene(const coder::array<char, 2U> &fileName, const coder::array<
+extern void opkene(const coder::array<char, 2U> &fileName, const coder::array<
                    double, 2U> &x, coder::array<double, 2U> &y);
 
 #endif

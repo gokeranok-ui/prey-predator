@@ -16,10 +16,7 @@
 #include "packageAndSetDataType.h"
 #include "rt_nonfinite.h"
 #include "coder_array.h"
-#include "hemen.h"
 #include <cmath>
-#include <stdio.h>
-
 
 // Function Definitions
 //
@@ -28,12 +25,11 @@
 //                coder::array<double, 2U> &y
 // Return Type  : void
 //
-int opkene(const coder::array<char, 2U> &fileName, const coder::array<double,
+void opkene(const coder::array<char, 2U> &fileName, const coder::array<double,
             2U> &x, coder::array<double, 2U> &y)
 {
-  //printf("Arnold=%s\n",fileName);
   static const char cv[7] = { 'm', 'a', 'm', 'd', 'a', 'n', 'i' };
-//printf("Sylvester=%c\n",fileName[2]);
+
   coder::array<b_struct_T, 2U> fis_input;
   coder::array<b_struct_T, 2U> fis_output;
   coder::array<c_struct_T, 2U> fis_rule;
@@ -66,7 +62,7 @@ int opkene(const coder::array<char, 2U> &fileName, const coder::array<double,
   if (!isInitialized_opkene) {
     opkene_initialize();
   }
-//printf("Shwar=%f\n");
+
   coder::getFISCodeGenerationData(fileName, expl_temp, fis_type, fis_andMethod,
     fis_orMethod, fis_defuzzMethod, fis_impMethod, fis_aggMethod, fis_input,
     fis_output, fis_rule);
@@ -75,9 +71,7 @@ int opkene(const coder::array<char, 2U> &fileName, const coder::array<double,
   for (i = 0; i < loop_ub; i++) {
     b_expl_temp.inputRange[i] = 0.0;
   }
-printf("generrr=%i\n",fis_output.size(1));
-int sayi = fis_output.size(1);
-//hemen(sayi);
+
   i = fis_input.size(1);
   for (varID = 0; varID < i; varID++) {
     b_expl_temp.inputRange[varID] = fis_input[varID].range[0];
@@ -731,7 +725,6 @@ int sayi = fis_output.size(1);
       y[i] = r[i];
     }
   }
-return sayi;
 }
 
 //

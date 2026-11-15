@@ -4,7 +4,7 @@
 
 The same evaluator can run different supported type-1 Mamdani or Sugeno controllers by loading a different model file. To bring it to another board, connect the file and I/O interfaces and allow enough memory for the parser and inference buffers. The projects below show that process on microcontrollers and on Linux. The [phone workflow](#manual-model-entry-and-an-iot-update) shows how a model could be authored remotely and delivered to an IoT device.
 
-[Browse MATLAB-generated C](matlab-c/) · [Browse MATLAB-generated C++](matlab-cpp/) · [Browse public STM32F469 firmware (gpt)](https://github.com/gokeranok-ui/prey-predator/tree/main/gpt) · [Download the source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
+[Browse MATLAB-generated C](matlab-c/) · [Browse MATLAB-generated C++](https://github.com/gokeranok-ui/prey-predator/tree/main/matlab-cpp) · [Browse public STM32F469 firmware (gpt)](https://github.com/gokeranok-ui/prey-predator/tree/main/gpt) · [Download the source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
 
 [Read the published article](https://gokeranok-ui.github.io/prey-predator/) · [Read the predator–prey background paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html) · [Email Goker ARIYAK](https://gokeranok-ui.github.io/prey-predator/#contact)
 
@@ -18,7 +18,7 @@ opt = evalfisOptions('NumSamplePoints',51);
 y = evalfis(fis,x,opt);
 ```
 
-The build declares a variable-length filename and input vector, then runs `codegen -config cfg opkene -args {fileName,x}` for C. Selecting `cfg.TargetLang = 'C++'` generates C++ with the corresponding application wrapper. The archived scripts show the custom entry files and include paths used for each build. [C generation recipe](generation/runn.m) · [C++ generation recipe](matlab-cpp/runn.m) · [Paper, Section 3.1](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=3)
+The build declares a variable-length filename and input vector, then runs `codegen -config cfg opkene -args {fileName,x}` for C. Selecting `cfg.TargetLang = 'C++'` generates the native C++ evaluator. Its `opkene` function takes the model filename and inputs and writes the result to an output array. The ESP32 application supplies its own startup code, storage and networking. [Native C++ interface](matlab-cpp/opkene.h) · [C generation recipe](generation/runn.m) · [Historical C++ build script with a custom application wrapper](platforms/esp32/runn.m) · [Paper, Section 3.1](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=3)
 
 For the STM32F469 integration, all 107 original C and header files had counterparts in the board project. After line-ending normalization, 98 were identical.
 
@@ -29,7 +29,7 @@ For the STM32F469 integration, all 107 original C and header files had counterpa
 | [STM32F469 · STM32CubeIDE](gpt/) | The application calls generated C and presents a model file to the parser. The public version reads from an SD card using FatFs. | An archived board run and a comparison of the generated files with the board sources. |
 | [Digix SAM3X8E · Arduino](platforms/ArduFuzzy/) | The Arduino C++ sketch calls the generated C runtime through `extern "C"`. The sketch handles serial and display I/O. | Physical execution of the `tipper.fis` model on the 84 MHz SAM board using Arduino Due support. |
 | [Raspberry Pi 3 Model B · Linux](platforms/raspberry-pi/) | GCC and Make build the generated C and its runner into `fuzzy_cli`. The command-line application accepts a model path and numeric inputs. | Ten archived runner calls averaged **3.0262 ms**, including model parsing and allocation. |
-| [ESP32 · Arduino](matlab-cpp/mainn.ino) | The sketch calls the generated C++ evaluator with model and input files in SPIFFS. The main loop services an FTP server over Wi-Fi. | The integration source and a firmware inventory for a DOIT ESP32 DevKit V1. Physical inference and a complete network model update remain unverified. |
+| [ESP32 · Arduino](platforms/esp32/) | The sketch calls the board-adapted C++ evaluator with model and input files in SPIFFS. The main loop services an FTP server over Wi-Fi. | The integration source and a firmware inventory for a DOIT ESP32 DevKit V1. Physical inference and a complete network model update remain unverified. |
 
 The historical board runs used different models and timed different operations. The later validation work identified a file-reading defect that could skip the final rule. On the corrected host build, one executable completed 1,000 tipper–FISMAT–tipper cycles and checked all 3,000 evaluations. The paper reports the board records and the corrected host results separately. [Board results, Table 3](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=8) · [File-reading corrections and model switching](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=11)
 
@@ -86,11 +86,11 @@ An Android phone or iPhone could serve as the operator’s terminal wherever the
 2. **Transfer the file.** Make the exported file available to the phone, then use an Android or iOS FTP client to upload it to the embedded device over a local network or an Internet connection that reaches the device. Remote desktop provides the editing controls. FTP carries the completed file.
 3. **Activate the controller.** The target application would validate the received file, load it into the generated C or C++ evaluator, and check an output. This would let an operator change compatible controller rules remotely without rebuilding the device firmware.
 
-The archived ESP32 sketch reads `/spiffs/ti.fis` and `/spiffs/x.txt` at startup, runs inference, then handles FTP requests. Activating a file uploaded during operation would require a reload step. The paper presents end-to-end phone transfer and activation as a proposed workflow. [ESP32 sketch](matlab-cpp/mainn.ino) · [File access and inference wrapper](matlab-cpp/opkene_main.cpp) · [Published workflow, Figure 5 and Section 5.4](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=17)
+The archived ESP32 sketch reads `/spiffs/ti.fis` and `/spiffs/x.txt` at startup, runs inference, then handles FTP requests. Activating a file uploaded during operation would require a reload step. The paper presents end-to-end phone transfer and activation as a proposed workflow. [ESP32 sketch](platforms/esp32/mainn.ino) · [File access and inference wrapper](platforms/esp32/opkene_main.cpp) · [Published workflow, Figure 5 and Section 5.4](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=17)
 
 <a href="https://docs.espressif.com/projects/esp-idf/en/v3.3.5/get-started/get-started-devkitc.html"><img src="https://raw.githubusercontent.com/espressif/esp-idf/v3.3.5/docs/_static/esp32-devkitc-functional-overview-f.jpeg" alt="Espressif’s annotated ESP32-DevKitC V4 reference board" width="500"></a>
 
-*ESP32 hardware reference from Espressif’s DevKitC V4 guide. The project’s own firmware inventory identifies a DOIT ESP32 DevKit V1.* [Board guide](https://docs.espressif.com/projects/esp-idf/en/v3.3.5/get-started/get-started-devkitc.html) · [Archived firmware inventory](matlab-cpp/firmware_inventory.json)
+*ESP32 hardware reference from Espressif’s DevKitC V4 guide. The project’s own firmware inventory identifies a DOIT ESP32 DevKit V1.* [Board guide](https://docs.espressif.com/projects/esp-idf/en/v3.3.5/get-started/get-started-devkitc.html) · [Archived firmware inventory](platforms/esp32/firmware_inventory.json)
 
 ## Repository structure
 
@@ -98,7 +98,8 @@ The archived ESP32 sketch reads `/spiffs/ti.fis` and `/spiffs/x.txt` at startup,
 | --- | --- |
 | [Generation inputs](generation/) | MATLAB entry point, original C build script, application entry file and two example FIS files. |
 | [MATLAB-generated C](matlab-c/) | All 52 C source files and 55 headers. [Open the C entry point](opkene.c). |
-| [MATLAB-generated C++](matlab-cpp/) | Generated C++ sources and headers, with the archived ESP32 application alongside them. [Open the C++ entry point](opkene.cpp). |
+| [MATLAB-generated C++](matlab-cpp/) | The original MATLAB Coder 5.1 export from 20 February 2021 contains 42 C++ source files and 47 headers. [Open the native C++ entry point](matlab-cpp/opkene.cpp). |
+| [ESP32 application](platforms/esp32/) | Complete historical Arduino project with the board-adapted evaluator, SPIFFS file access and Wi-Fi/FTP support. Also available in `09_esp32/` in the source ZIP. [Open the sketch](platforms/esp32/mainn.ino). |
 | [STM32F469](gpt/) · [SAM3X8E](platforms/ArduFuzzy/) · [Raspberry Pi](platforms/raspberry-pi/) | Browsable native projects from the public source release. |
 | [Predator–prey models](PreyPredator/) | Simulink desktop and STM32F407 board models and the FIS definition. |
 | [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip) | Source, supporting records, component notices and file checksums. |

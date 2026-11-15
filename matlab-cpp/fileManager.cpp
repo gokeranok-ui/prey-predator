@@ -119,13 +119,7 @@ namespace coder
       }
 
       ccfilename[cfilename.size(1)] = '\x00';
-
-      printf("filename=%s",&ccfilename[0]);
-      
       filestar = fopen(&ccfilename[0], cpermission);
-
-      printf("filestar=%f\n", filestar);
-      
       if (filestar != NULL) {
         eml_openfiles[j - 1] = filestar;
         eml_autoflush[j - 1] = true;

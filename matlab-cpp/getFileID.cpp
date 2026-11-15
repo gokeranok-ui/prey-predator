@@ -132,8 +132,3 @@ namespace coder
 //
 // [EOF]
 //
-
-// File trailer for getFileID.cpp
-//
-// [EOF]
-//
