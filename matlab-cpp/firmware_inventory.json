@@ -1,0 +1,8 @@
+{
+  "original_filename": "mainn.ino.doitESP32devkitV1.bin",
+  "bytes": 1023728,
+  "sha256": "915c4e76e1b93425b5f3109a213bba1285b411daff89652e0cf03c1a3a262633",
+  "included": false,
+  "reason": "Original binary is retained privately; it may embed historical network credentials.",
+  "evidence": "Archived firmware artifact; not rebuilt, flashed or benchmarked during this study."
+}

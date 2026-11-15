@@ -38,6 +38,11 @@ Third-party material
   third-party content in .mdl and .fis files.
 - MathWorks products, libraries, and examples, Aimagin Waijung blocks and
   templates, and STMicroelectronics drivers retain their respective terms.
+  In the browsable source folders, LICENSES/Apache-2.0.txt accompanies the
+  Arm CMSIS files bearing that notice under gpt/Drivers/CMSIS/Include.
+  LICENSES/GPL-3.0.txt accompanies matlab-cpp/ESP8266FtpServer.cpp and its
+  header, which identify GPL version 3 or later. Other files retain their
+  own notices.
   Check the applicable product or component license for vendor material in
   generated output. The license agreement supplied with Waijung 18.11a
   describes evaluation use and refers other uses to Aimagin's licensing

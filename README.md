@@ -4,15 +4,15 @@
 
 [Published Electronics article](https://gokeranok-ui.github.io/prey-predator/) · [Predator–prey paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html)
 
-[MATLAB-generated C](opkene.c) · [MATLAB-generated C++](opkene.cpp) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
+[Browse MATLAB-generated C](matlab-c/) · [Browse MATLAB-generated C++ for ESP32](matlab-cpp/) · [Browse the STM32F469 project (gpt)](gpt/) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
 
 If this paper, code, or model helps you in your research, please cite Goker Ariyak’s article in *Electronics* 15(22), 5297 (2026). Thank you for crediting this work. [DOI 10.3390/electronics15225297](https://doi.org/10.3390/electronics15225297) · [Email Goker ARIYAK](https://gokeranok-ui.github.io/prey-predator/#contact)
 
 ### STM32F469 companion project
 
-The [companion repository](https://github.com/gokeranok-ui/gpt) contains the STM32F469 firmware described in Section 6 and Table 10 of the paper. At commit `65209fe`, `gpt/Core/Src/opkene.c` is the MATLAB-generated C entry point. The board adapter in `gpt/Core/Src/fis_virtual_fs.c` lets the parser open an embedded copy of `fismat.fis` by name.
+The [public gpt folder](gpt/) contains the STM32F469 project distributed in the source ZIP. Start with the [board source files](gpt/Core/Src/), [headers](gpt/Core/Inc/), or [SD-card file adapter](gpt/Core/Src/fis_virtual_fs.c).
 
-The companion repository requires access. Anyone can download the [public source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip). Open `02_original_core/` for the original generated C and headers, or `03_stm32f469/Core/Src/` for the later board implementation that loads a model from an SD card.
+Section 6 and Table 10 also cite an earlier version in the [original gpt repository](https://github.com/gokeranok-ui/gpt) (access required). At [commit `65209fe`](https://github.com/gokeranok-ui/gpt/tree/65209fef3511e48a088f6ba5c06afdf459537119/gpt/Core/Src), the file adapter serves an embedded copy of `fismat.fis` from board memory. The public folder contains the later SD-card version.
 
 ## 📖 Project Story
 
@@ -174,11 +174,16 @@ The system implements a complete Mamdani fuzzy inference engine:
 
 [Published Electronics article](https://gokeranok-ui.github.io/prey-predator/) · [Predator–prey paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html)
 
-[MATLAB-generated C](opkene.c) · [MATLAB-generated C++](opkene.cpp) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
+[Browse MATLAB-generated C](matlab-c/) · [Browse MATLAB-generated C++ for ESP32](matlab-cpp/) · [Browse the STM32F469 project (gpt)](gpt/) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
+
+The C folder contains all 52 source files and 55 headers from `02_original_core/` in the ZIP. The C++ folder contains the generated sources and headers alongside the ESP32 integration files from `09_esp32/`. To open the inference entry point directly, see [opkene.c](opkene.c) or [opkene.cpp](opkene.cpp).
 
 ```
 prey-predator/
 ├── electronics-15-05297.pdf            # Published Electronics article
+├── matlab-c/                           # Original MATLAB Coder C sources and headers
+├── matlab-cpp/                         # MATLAB Coder C++ sources and ESP32 integration
+├── gpt/                                # Public STM32F469 project from the source ZIP
 ├── opkene.c                            # Generated C entry point
 ├── opkene.cpp                          # Generated C++ entry point
 ├── Fuzzy_Inference_Source.zip          # Source and supporting files
