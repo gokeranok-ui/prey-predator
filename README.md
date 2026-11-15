@@ -2,11 +2,13 @@
 
 [![GitHub](https://img.shields.io/badge/GitHub-gokeranok--ui-blue?logo=github)](https://github.com/gokeranok-ui)
 
-[MATLAB-generated C](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item6) · [MATLAB-generated C++](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item721) · [Download source archive](https://zenodo.org/records/23355621/files/Fuzzy_Inference_Supporting_Materials.zip?download=1)
+[Published Electronics article](https://gokeranok-ui.github.io/prey-predator/) · [Predator–prey paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html)
+
+[MATLAB-generated C](opkene.c) · [MATLAB-generated C++](opkene.cpp) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
 
 ## 📖 Project Story
 
-This project was inspired by the research paper **"Fuzzy Logic Control for Predator-Prey Systems"** by Bojadziev (1995) - included as `prey.pdf` in this repository. The paper presented a theoretical framework for using fuzzy logic to control ecological population dynamics in predator-prey systems, and we wondered: *"Can we implement this on a real embedded system?"*
+The project draws on fuzzy control of predator and prey populations. The repository includes an AI-generated reproduction of the background reading. The exposition presents a theoretical framework for using fuzzy logic to control ecological population dynamics in predator-prey systems, and we wondered: *"Can we implement this on a real embedded system?"*
 
 ### The Journey
 
@@ -177,12 +179,18 @@ The system implements a complete Mamdani fuzzy inference engine:
 
 ## 📁 Repository Structure
 
-[MATLAB-generated C](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item6) · [MATLAB-generated C++](https://zenodo.org/records/23355621/preview/Fuzzy_Inference_Supporting_Materials.zip#tree_item721) · [Download source archive](https://zenodo.org/records/23355621/files/Fuzzy_Inference_Supporting_Materials.zip?download=1)
+[Published Electronics article](https://gokeranok-ui.github.io/prey-predator/) · [Predator–prey paper (AI reproduction)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html)
+
+[MATLAB-generated C](opkene.c) · [MATLAB-generated C++](opkene.cpp) · [Download source ZIP](https://github.com/gokeranok-ui/prey-predator/raw/refs/heads/main/Fuzzy_Inference_Source.zip)
 
 ```
 prey-predator/
+├── electronics-15-05297.pdf            # Published Electronics article
+├── opkene.c                            # Generated C entry point
+├── opkene.cpp                          # Generated C++ entry point
+├── Fuzzy_Inference_Source.zip          # Source and supporting files
 ├── README.md                           # This file
-├── prey.pdf                            # Research paper that inspired the project
+├── prey.pdf                            # AI-generated reproduction
 ├── Prey_Predator_STM32FDISCO.jpg       # Hardware setup photo
 ├── LCD_specs.jpg                       # LCD specifications
 ├── sim1.jpg                            # Simulation results
@@ -262,7 +270,7 @@ This implementation serves as a **proof-of-concept** showing that:
 
 ## 📚 References
 
-1. **Bojadziev, G. (1995)**. "Fuzzy Logic Control for Predator-Prey Systems". *Fuzzy Sets and Systems*. (Included as `prey.pdf`)
+1. [Fuzzy Logic Control for Predator–Prey Systems (Reproduced and Modernized Exposition)](https://gokeranok-ui.github.io/prey-predator/predator-prey.html). AI-generated reproduction.
 
 2. **Waijung Blockset Documentation**: [https://waijung.aimagin.com/](https://waijung.aimagin.com/)
 
@@ -280,7 +288,7 @@ This implementation serves as a **proof-of-concept** showing that:
 
 ## 👤 Author
 
-**ARIYAK**
+**Goker ARIYAK**
 
 GitHub: [@gokeranok-ui](https://github.com/gokeranok-ui)
 
@@ -291,7 +299,7 @@ This project includes code generated from MATLAB/Simulink and Waijung Blockset. 
 - Waijung Blockset licensing terms
 - STMicroelectronics HAL driver licensing (SLA0044)
 
-See [LICENSE](LICENSE) file for more details.
+The published article is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The AI reproduction is outside the project's MIT grant. Generated source and the source ZIP retain their applicable component terms. See [LICENSE](LICENSE).
 
 ## 🙏 Acknowledgments
 
@@ -302,7 +310,7 @@ See [LICENSE](LICENSE) file for more details.
 
 ---
 
-**Last Updated**: January 2025  
+**Last Updated**: November 14, 2026  
 **Project Status**: [Published in Electronics](https://doi.org/10.3390/electronics15225297)  
 **Hardware Validated**: ✅ STM32F4 Discovery Board  
 **Performance Verified**: ✅ Real-time execution confirmed
