@@ -237,41 +237,23 @@ for (inputID = 0; inputID < 2; inputID++) {
 
 **Note**: `outputMFCache` is pre-computed and stored in `BlockIO` structure (persistent).
 
-## Real-Time Performance
+## Measured STM32F407 application-step timing
 
-### Execution Timing
+The Waijung application configures a 10 ms model period. On the 168 MHz STM32F407, the Data Watchpoint and Trace cycle counter timed 10,000 complete calls to `Prey_Predator_STM32F4_step()` after 10 warmup steps. The timed region includes the fuzzy controller, text formatting, LCD and GPIO work. [Table 4 of the published paper](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=10).
 
-- **Sample Period**: 10 ms (100 Hz)
-- **CPU Frequency**: 168 MHz (STM32F407)
-- **Available Cycles**: 1,680,000 cycles per sample
+| Mean | Median | 95th percentile | Observed maximum |
+| --- | --- | --- | --- |
+| 7.67467 ms | 7.67421 ms | 7.67421 ms | 7.73465 ms |
 
-### Estimated Execution Time
-
-Assuming:
-- MF evaluation: ~50 cycles each → 10 × 50 = **500 cycles**
-- Rule evaluation: ~20 cycles per rule → 4 × 20 = **80 cycles**
-- Consequent evaluation: ~5 cycles per operation → 1,616 × 5 = **8,080 cycles**
-- Defuzzification: ~10 cycles per sample → 202 × 10 = **2,020 cycles**
-- Overhead (LCD, I/O): ~50,000 cycles
-
-**Total Estimated**: ~60,680 cycles ≈ **0.36 ms** @ 168 MHz
-
-**Utilization**: 0.36 ms / 10 ms = **3.6% CPU usage**
-
-### Worst-Case Analysis
-
-- All MFs evaluated: ✓ (always)
-- All rules fire: ✓ (always, with varying strengths)
-- All sample points processed: ✓ (always)
-- **Deterministic execution time**: Yes (no branches affecting worst-case)
+The archived record contains aggregate timings. Inference-only latency, processor utilization and a worst-case execution-time bound cannot be derived from these measurements.
 
 ## Code Quality Observations
 
 ### Strengths
 
-1. **Deterministic**: Fixed execution path, no dynamic memory
+1. **Fixed model dimensions**: The generated controller sizes its arrays for the configured rules and membership functions
 2. **Efficient**: Pre-computed output MFs, no redundant calculations
-3. **Real-time Safe**: No blocking operations, interrupt-driven
+3. **Scheduling**: SysTick provides the model's periodic trigger
 4. **Type Safety**: Strong typing with `real_T` (double precision)
 
 ### Limitations
@@ -303,14 +285,13 @@ Assuming:
 
 The generated code implements a **complete Mamdani fuzzy inference system** with:
 - ✅ Correct fuzzification, inference, and defuzzification
-- ✅ Real-time capable (< 1 ms execution)
-- ✅ Deterministic execution
+- ✅ Complete application-step timing recorded on STM32F407
 - ⚠️ High memory usage (pre-computed MFs)
 - ⚠️ Large code size (auto-generated verbosity)
 
 For **publication purposes**, this demonstrates:
 1. **Fuzzy logic can be deployed** on embedded systems via code generation
-2. **Real-time performance** is achievable (< 1% CPU for this FIS)
+2. **Board measurements** include inference, formatting, LCD and GPIO operations
 3. **Graphical modeling** (Simulink) provides alternative to direct code generation
 
 The code serves as a **proof-of-concept** rather than an optimized implementation, suitable for demonstrating the feasibility of fuzzy control on embedded platforms.

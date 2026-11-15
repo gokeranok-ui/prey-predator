@@ -19,8 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Complete Simulink model for prey-predator fuzzy logic control system
 - Generated C code for STM32F4 Discovery board (843 files)
 - Hardware implementation with LCD keypad shield
-- Real-time fuzzy inference at 100 Hz (10 ms sample period)
-- Performance measurements showing ~0.36 ms execution time (< 4% CPU usage)
+- Waijung application configured with a 10 ms model period
 
 ### Technical Details
 - **Fuzzy System**: Mamdani-type with 2 inputs, 2 outputs, 4 rules
@@ -32,11 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Target Platform**: STM32F407VG (Cortex-M4 @ 168 MHz)
 - **Toolchain**: MATLAB R2025a + Waijung Blockset 18.11a
 
-### Performance
-- Execution time: ~0.36 ms per inference cycle
-- CPU utilization: 3.6%
-- Sample rate: 100 Hz
-- Deterministic execution (fixed execution path)
+### Published board timing
+
+The STM32F407 complete application step averaged 7.67467 ms over 10,000 steps and reached an observed maximum of 7.73465 ms. The timed step includes inference, formatting, LCD and GPIO work. [Table 4 of the published paper](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=10).
 
 ### Hardware
 - STM32F4 Discovery Board (STM32F407VG)

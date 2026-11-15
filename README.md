@@ -26,7 +26,7 @@ The journey began with reading the research paper, which described a Mamdani-typ
 
 **Simulink + Waijung Blockset: A Successful Approach**
 
-We chose to implement this using **MATLAB Simulink** with the **Waijung Blockset**, an open-source solution for embedded code generation targeting STM32 microcontrollers. This choice proved to be highly successful:
+We chose to implement this using **MATLAB Simulink** with the **Waijung Blockset**, a tool for embedded code generation targeting STM32 microcontrollers. This choice proved to be highly successful:
 
 - ✅ **Graphical Modeling**: Visual representation of the fuzzy logic system
 - ✅ **Automatic Code Generation**: From Simulink model to production-ready C code
@@ -73,7 +73,7 @@ This project demonstrates a **fuzzy logic control system for predator-prey popul
 - Takes two inputs: **Prey population** (X1) and **Predator population** (X2)
 - Produces two outputs: **Recommended change in Prey** (ΔX1) and **Recommended change in Predator** (ΔX2)
 - Uses **Mamdani fuzzy inference** with centroid defuzzification
-- Runs in **real-time** at 100 Hz (10 ms sample period)
+- Uses a configured 10 ms model period (100 Hz)
 
 ### Fuzzy System Specifications
 
@@ -124,32 +124,17 @@ Users can modify these input values within the admissible region (as defined by 
 
 ## ⚡ Performance Metrics
 
-### Execution Time Analysis
+### STM32F407 application-step timing
 
-One of the key achievements of this project was demonstrating that fuzzy logic inference can run efficiently on resource-constrained embedded systems:
+On the STM32F407 at 168 MHz, the complete Waijung application step averaged **7.67467 ms** over 10,000 steps after 10 warmup steps. The observed maximum was **7.73465 ms**. Each timed call to `Prey_Predator_STM32F4_step()` includes fuzzy inference, text formatting, LCD updates and GPIO operations. Inference-only latency and processor utilization were not measured separately. [Table 4 of the published paper](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=10).
 
-- **Execution Time**: ~**0.36 ms** per inference cycle
-- **CPU Utilization**: < **4%** (3.6% actual)
-- **Sample Rate**: 100 Hz (10 ms period)
-- **Deterministic**: Fixed execution path with no dynamic memory allocation
+![Simulink block diagram of the STM32F4 predator–prey controller](sim1.jpg)
 
-**Performance Breakdown:**
-- Membership function evaluation: ~500 cycles
-- Rule evaluation: ~80 cycles  
-- Consequent evaluation & aggregation: ~8,080 cycles
-- Defuzzification: ~2,020 cycles
-- Hardware I/O overhead: ~50,000 cycles
-- **Total**: ~60,680 cycles ≈ 0.36 ms @ 168 MHz
+*Figure 3. Simulink model of the predator–prey controller, including its inputs, fuzzy controller and display blocks.*
 
-This demonstrates that fuzzy logic control is **well-suited for real-time embedded applications**, with plenty of headroom for additional processing or higher sample rates.
+![Waijung build window in Simulink](SH1.jpg)
 
-![Simulation Results](sim1.jpg)
-
-*Figure 3: Simulation results showing fuzzy inference behavior*
-
-![System Hardware](SH1.jpg)
-
-*Figure 4: System hardware setup showing the integrated controller*
+*Figure 4. Waijung build window showing source generation, packaging and compilation for the STM32F4 target.*
 
 ## 🛠️ Technical Implementation
 
@@ -201,12 +186,12 @@ prey-predator/
 ├── prey.pdf                            # AI-generated reproduction
 ├── Prey_Predator_STM32FDISCO.jpg       # Hardware setup photo
 ├── LCD_specs.jpg                       # LCD specifications
-├── sim1.jpg                            # Simulation results
-├── SH1.jpg                             # System hardware photo
+├── sim1.jpg                            # Simulink model diagram
+├── SH1.jpg                             # Waijung build window
 ├── PreyPredator/                       # Simulink project files
 │   ├── Prey_Predator_STM32F4.slx       # Main Simulink model
 │   ├── fismat.fis                      # Fuzzy Inference System definition
-│   └── predator_prey.m                 # Original MATLAB script
+│   └── Presentation.mdl                # Desktop Simulink model
 └── [additional documentation...]
 ```
 
@@ -263,7 +248,7 @@ prey-predator/
 This project demonstrates:
 
 1. **✅ Successful Code Generation**: From Simulink graphical models to embedded C code
-2. **✅ Real-Time Performance**: Sub-millisecond fuzzy inference on microcontroller
+2. **✅ Board timing**: Measured the complete application step on the STM32F407
 3. **✅ Practical Application**: Ecological control system running on embedded hardware
 4. **✅ Alternative Workflow**: Model-based design for fuzzy logic systems
 
@@ -273,7 +258,6 @@ This implementation serves as a **proof-of-concept** showing that:
 
 - Fuzzy logic controllers can be deployed on embedded systems via graphical modeling tools
 - Simulink with Waijung Blockset provides a viable path from model to hardware
-- Real-time performance is achievable with minimal CPU overhead
 - The approach is accessible to engineers familiar with Simulink but new to embedded C programming
 
 ## 📚 References
@@ -290,8 +274,6 @@ This implementation serves as a **proof-of-concept** showing that:
 
 - This code is **auto-generated** from Simulink model using MATLAB Real-Time Workshop
 - The fuzzy logic implementation follows **Mamdani inference** methodology
-- Code is optimized for **real-time execution** on STM32F4 (168 MHz Cortex-M4)
-- System runs at **100 Hz** with deterministic execution time
 - **Input Modification**: Users can change the input numbers by creating **L and M storages** and feed the fuzzy inputs by these new storage values
 
 ## 👤 Author
@@ -321,4 +303,4 @@ The published article is licensed under [CC BY 4.0](https://creativecommons.org/
 **Last Updated**: November 14, 2026  
 **Project Status**: [Published in Electronics](https://doi.org/10.3390/electronics15225297)  
 **Hardware Validated**: ✅ STM32F4 Discovery Board  
-**Performance Verified**: ✅ Real-time execution confirmed
+**Board timing record** · [Table 4 of the published paper](https://gokeranok-ui.github.io/prey-predator/electronics-15-05297.pdf#page=10)
