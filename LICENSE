@@ -20,19 +20,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
+Scope of the MIT grant
 
-**Note on Third-Party Components:**
+Goker Ariyak (ARIYAK, GitHub account gokeranok-ui) licenses under the MIT
+terms above all original material in this repository for which he controls
+the copyright. This includes his MATLAB scripts, fuzzy inference system
+definitions, Simulink model design and modifications, build and workflow
+files, documentation, diagrams, photographs, and original elements of
+screenshots. For a file with more than one source, this grant covers the
+portions for which he controls the rights.
 
-This project includes code and components from third parties that are subject to their own license terms:
+Third-party material
 
-- **MATLAB/Simulink Generated Code**: Licensed under MathWorks license terms. Generated code from MATLAB Simulink Real-Time Workshop.
-
-- **Waijung Blockset**: Licensed under Waijung Blockset license terms. See Waijung Blockset documentation for details.
-
-- **STM32 HAL Drivers**: Licensed under STMicroelectronics license (SLA0044). These components remain the property of STMicroelectronics. Please refer to www.st.com/SLA0044 for STMicroelectronics license terms.
-
-- **Research Paper (`prey.pdf`)**: This is a reference document. Please respect the original publisher's copyright. Cite appropriately in any derivative work.
-
-These components remain the property of their respective owners and their license terms apply.
-
+- PreyPredator/Prey_Predator_STM32F4.slx records an earlier creator in its
+  metadata. Any pre-existing model elements, examples, and vendor blocks
+  remain subject to their owners' terms. The same principle applies to
+  third-party content in .mdl and .fis files.
+- MathWorks products, libraries, and examples, Aimagin Waijung blocks and
+  templates, and STMicroelectronics drivers retain their respective terms.
+  Check the applicable product or component license for vendor material in
+  generated output. The license agreement supplied with Waijung 18.11a
+  describes evaluation use and refers other uses to Aimagin's licensing
+  options.
+- prey.pdf is a separate reference document outside this MIT grant.
+  Third-party illustrations, specifications, product-interface artwork,
+  and other third-party elements in images retain their owners' rights.
+  This includes any such material in LCD_specs.jpg and screenshots.
